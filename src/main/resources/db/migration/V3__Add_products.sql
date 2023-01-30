@@ -1,0 +1,2 @@
+INSERT INTO product (id, country, description, filename, fragrance_base_notes, fragrance_middle_notes, fragrance_top_notes, product_gender, product_title, productr, price, type, volume, year, product_rating)
+VALUES (1, 'Germany', null, 'test.jpg', 'Salmwood, Musky notes, Sandalwood', 'Cardamom, Jasmine, African violet', 'Birch leaf, Lavender', 'male', 'Boss Bottled Night', 'Hugo Boss', 35, 'Eau de Toilette', '100', 2010, 0);
