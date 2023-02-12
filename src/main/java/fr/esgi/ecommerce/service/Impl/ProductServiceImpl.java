@@ -1,6 +1,7 @@
 package fr.esgi.ecommerce.service.Impl;
 
 import fr.esgi.ecommerce.domain.Product;
+import fr.esgi.ecommerce.domain.Review;
 import fr.esgi.ecommerce.repository.ProductRepository;
 import fr.esgi.ecommerce.repository.ReviewRepository;
 import fr.esgi.ecommerce.service.FilesStorageService;

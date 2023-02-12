@@ -1,11 +1,10 @@
 package fr.esgi.ecommerce.service.Impl;
 
+import fr.esgi.ecommerce.domain.BidProduct;
 import fr.esgi.ecommerce.domain.Order;
 import fr.esgi.ecommerce.domain.OrderItem;
 import fr.esgi.ecommerce.domain.Product;
-import fr.esgi.ecommerce.repository.OrderItemRepository;
-import fr.esgi.ecommerce.repository.OrderRepository;
-import fr.esgi.ecommerce.repository.ProductRepository;
+import fr.esgi.ecommerce.repository.*;
 import fr.esgi.ecommerce.service.OrderService;
 import fr.esgi.ecommerce.service.email.MailSenderService;
 import graphql.schema.DataFetcher;
@@ -26,7 +25,8 @@ public class OrderServiceImpl implements OrderService {
     private final OrderItemRepository orderItemRepository;
     private final ProductRepository productRepository;
     private final MailSenderService mailSenderService;
-
+    private final BidProductRepository bidProductRepository;
+    private final UserRepository userRepository;
     @Override
     public List<Order> findAll() {
         return orderRepository.findAllByOrderByIdAsc();
@@ -77,6 +77,39 @@ public class OrderServiceImpl implements OrderService {
         orderRepository.save(order);
 
         String subject = "Order #" + order.getId();
+        String template = "order-template";
+        Map<String, Object> attributes = new HashMap<>();
+        attributes.put("order", order);
+        mailSenderService.sendMessageHtml(order.getEmail(), subject, template, attributes);
+        return order;
+    }
+
+    @Override
+    @Transactional
+    public Order postAuctionOrder(Long productId) {
+        Order order = new Order();
+        List<OrderItem> orderItemList = new ArrayList<>();
+        var product = bidProductRepository.findById(productId).get();
+        var bid = product.getBids().stream().max((o1, o2) -> (int) (o1.getAmount() - o2.getAmount())).get();
+            OrderItem orderItem = new OrderItem();
+            orderItem.setBidProduct(product);
+            orderItem.setAmount(Long.valueOf(bid.getAmount()));
+            orderItem.setQuantity(1l);
+            orderItemList.add(orderItem);
+            orderItemRepository.save(orderItem);
+            var user = userRepository.findByEmail(bid.getUserEmail());
+        order.getOrderItems().addAll(orderItemList);
+        order.setTotalPrice(bid.getAmount() * 1.0);
+        order.setFirstName(user.getFirstName());
+        order.setLastName(user.getLastName());
+        order.setCity(user.getCity());
+        order.setAddress(user.getAddress());
+        order.setPostIndex(Integer.valueOf(user.getPostIndex()));
+        order.setEmail(user.getEmail());
+        order.setPhoneNumber(user.getPhoneNumber());
+        orderRepository.save(order);
+
+        String subject = "Auction order #" + order.getId();
         String template = "order-template";
         Map<String, Object> attributes = new HashMap<>();
         attributes.put("order", order);

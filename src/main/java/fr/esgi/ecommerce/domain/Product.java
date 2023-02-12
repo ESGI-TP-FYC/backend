@@ -29,6 +29,6 @@ public class Product {
     private String type;
     private Double productRating;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY)
     private List<Review> reviews;
 }

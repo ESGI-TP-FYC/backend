@@ -9,7 +9,7 @@ import javax.validation.constraints.Size;
 @Data
 public class RegistrationRequest {
 
-    @NotBlank(message = "Fill captcha.")
+
     private String captcha;
 
     @NotBlank(message = "First name cannot be empty")

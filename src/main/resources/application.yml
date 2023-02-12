@@ -1,18 +1,45 @@
+application:
+  document:
+    upload-directory: ${BACKEND_DIR_PATH}
+  mail:
+    sender: ${MAIL_SENDER}
+  scheduler:
+    cron: 0 0 0 * * ? *
+    zone: UTC
+hostname: ${HOSTNAME}
 jwt:
+  expiration: 604800
   header: Authorization
-  secret:  ${JWT_SECRET}
-  expiration: 86400
+  secret: ${JWT_SECRET}
+logging:
+  level:
+    fr:
+      esgi:
+        ecommerce:
+          controller: debug
+mail:
+  debug: false
+recaptcha:
+  secret: ${RECAPTCHA_SECRET}
+  url: https://www.google.com/recaptcha/api/siteverify?secret=%s&response=%s
+server:
+  port: ${PORT}
 spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    password: ${BDD_USERNAME}
+    username: ${BDD_PASSWORD}
+    url: jdbc:postgresql://${BDD_URL}?useSSL=false
   jpa:
-    generate-ddl: 'true'
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    generate-ddl: true
     hibernate:
       ddl-auto: none
-      disableConnectionTracking: 'true'
-      format_sql: 'true'
-      show_sql: 'true'
+      disableConnectionTracking: true
+      format_sql: true
+      show_sql: true
       type: all
-      use_sql_comments: 'false'
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
+      use_sql_comments: false
   mail:
     properties:
       mail:
@@ -25,33 +52,9 @@ spring:
     username: ${MAIL_USERNAME}
     password: ${MAIL_PASSWORD}
     port: ${MAIL_PORT}
-  datasource:
-    driver-class-name: org.postgresql.Driver
-    password: ${BDD_USERNAME}
-    username: ${BDD_PASSWORD}
-    url: jdbc:postgresql://${BDD_URL}?useSSL=false
   servlet:
     multipart:
-      enabled: 'true'
+      enabled: true
+      file-size-threshold: 2MB
       max-file-size: 5MB
       max-request-size: 10MB
-      file-size-threshold: 2MB
-mail:
-  debug: 'false'
-logging:
-  level:
-    fr:
-      esgi:
-        ecommerce:
-          controller: debug
-application:
-  document:
-    upload-directory: ${BACKEND_DIR_PATH}
-  mail:
-    sender: ${MAIL_SENDER}
-hostname:  ${HOSTNAME}
-server:
-  port: ${PORT}
-recaptcha:
-  url: https://www.google.com/recaptcha/api/siteverify?secret=%s&response=%s
-  secret: ${RECAPTCHA_SECRET}

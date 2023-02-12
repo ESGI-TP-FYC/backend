@@ -17,4 +17,6 @@ public class OrderItem {
 
     @OneToOne
     private Product product;
+    @OneToOne
+    private BidProduct bidProduct;
 }

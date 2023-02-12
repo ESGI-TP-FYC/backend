@@ -19,4 +19,6 @@ public interface OrderService {
     DataFetcher<List<Order>> getAllOrdersByQuery();
 
     DataFetcher<List<Order>> getUserOrdersByEmailQuery();
+
+     Order postAuctionOrder(Long bidProductId);
 }
